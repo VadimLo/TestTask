@@ -14,22 +14,28 @@ public class Validator {
         int openCount = 0;
         int closeCount = 0;
         int residual;
+        int residual2 = 0;
         boolean flag = true;
-
-
-        StringBuilder inputFirstRow = new StringBuilder(input);
-        StringBuilder inputSecondRow = new StringBuilder(input);
 
         Set<String> validateSet = new TreeSet<String>();
 
+
+        StringBuilder qw = new StringBuilder(input);
+
+
         while (flag) {   //remove first and last invalid chars from input row
 
-            if (inputFirstRow.charAt(0) == CLOSE) {
-                inputFirstRow.deleteCharAt(0);
+            if (qw.length() == 0) {
+                validateSet.add("");
+                return validateSet;
+
+            }
+            if (qw.charAt(0) == CLOSE) {
+                qw.deleteCharAt(0);
             } else {
-                int lastChar = inputFirstRow.length() - 1;
-                if (inputFirstRow.charAt(lastChar) == OPEN) {
-                    inputFirstRow.deleteCharAt(lastChar);
+                int lastChar = qw.length() - 1;
+                if (qw.charAt(lastChar) == OPEN) {
+                    qw.deleteCharAt(lastChar);
                 } else {
                     flag = false;
                 }
@@ -37,7 +43,12 @@ public class Validator {
 
         }
 
-        for (int i = 0; i < inputFirstRow.length(); i++) {
+        StringBuilder inputFirstRow = new StringBuilder(qw);
+        StringBuilder inputSecondRow = new StringBuilder(qw);
+        //StringBuilder inputThirdRow = new StringBuilder(input);
+
+
+        for (int i = 0; i < inputFirstRow.length(); i++) { //compare count of open and close
             if (inputFirstRow.charAt(i) == OPEN) {
                 openCount++;
             }
@@ -52,6 +63,8 @@ public class Validator {
             return validateSet;
         } else {
             residual = openCount - closeCount;
+            residual2 = openCount - closeCount;
+
             if (residual > 0) {     //open>close
 
                 for (int i = 0; i < inputFirstRow.length(); i++) {
@@ -74,17 +87,28 @@ public class Validator {
 
         }
 
-        for (int i = 0; i < inputSecondRow.length(); i++) {//Second check
-            if (inputSecondRow.charAt(i)==OPEN && inputSecondRow.charAt(i+1)==OPEN) {
-                inputSecondRow.deleteCharAt(i+1);
+        for (int i = 1; i < inputSecondRow.length(); i++) {//Second check
+            if (residual2 > 0) {
+                if (inputSecondRow.charAt(i-1) == OPEN && inputSecondRow.charAt(i ) == OPEN) {
+                    inputSecondRow.deleteCharAt(i);
 
+                    residual2--;
+                }
+            } else {
+                if (inputSecondRow.charAt(i-1) == CLOSE && inputSecondRow.charAt(i ) == CLOSE  ) {// || inputSecondRow.charAt(i ) == CLOSE && inputSecondRow.charAt(i + 1) == OPEN
+                    inputSecondRow.deleteCharAt(i-1);
+                    residual2++;
+                    i--;
+                }
             }
-            if (inputSecondRow.charAt(i)==CLOSE && inputSecondRow.charAt(i+1)==CLOSE) {
-                inputSecondRow.deleteCharAt(i+1);
+            if (residual2 == 0) {
+                break;
+            }
 
-            }
+
         }
         validateSet.add(inputSecondRow.toString());
         return validateSet;
+
     }
 }

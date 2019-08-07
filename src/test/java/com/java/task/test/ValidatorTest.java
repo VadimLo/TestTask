@@ -7,16 +7,19 @@ import org.junit.Test;
 import static com.java.task.validator.Validator.validate;
 
 public class ValidatorTest {
-    private String testRow="{}}{}}";
+    private String testRow = "}{}}}{{}{}{}}}{{{";
+
+    //private String testRow="{{{}}}}";
     @Test
-    public void shouldReturnSet(){
+    public void shouldReturnSet() {
         Assert.assertNotNull(validate(testRow));
 
     }
+
     @Test
-    public void shouldReturnCorrectExpectedValue(){
-        String expectedValue ="{}{}";
-       // Assert.assertEquals(expectedValue, validate(testRow).iterator().next());
+    public void shouldReturnCorrectExpectedValue() {
+        String expectedValue = "{}{}";
+        // Assert.assertEquals(expectedValue, validate(testRow).iterator().next());
         System.out.println(validate(testRow));
 
     }
