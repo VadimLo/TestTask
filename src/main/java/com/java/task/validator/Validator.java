@@ -14,17 +14,16 @@ public class Validator {
         int openCount = 0;
         int closeCount = 0;
         int residual;
+        int absolute;
         char removedChar;
 
         Set<String> validateSet = new TreeSet<String>();
-
 
 
         StringBuilder builderFromInputRow = removeFirstAndLastChars(input);
         if (builderFromInputRow.length() <= 1) {
             validateSet.add("");
             return validateSet;
-
         }
 
         for (int i = 0; i < builderFromInputRow.length(); i++) { //compare count of open and close
@@ -37,14 +36,15 @@ public class Validator {
 
         }
         residual = openCount - closeCount;
+        absolute = abs(residual);
         if (residual > 0) {
             removedChar = OPEN;
         } else {
             removedChar = CLOSE;
         }
 
-
-        validateSet = removeCharsByCombinationList(findAllRemoveCombinationsIndexes(builderFromInputRow, abs(residual), removedChar), builderFromInputRow);
+        ArrayList<TreeSet<Integer>> combinationList = findAllRemoveCombinationsIndexes(builderFromInputRow, absolute, removedChar);
+        validateSet = removeCharsByCombinationList(combinationList, builderFromInputRow);
 
 
         for (Iterator<String> stringIterator = validateSet.iterator(); stringIterator.hasNext(); ) {
@@ -62,12 +62,12 @@ public class Validator {
 
     }
 
-    public static ArrayList<TreeSet<Integer>> findAllRemoveCombinationsIndexes(
+    private static ArrayList<TreeSet<Integer>> findAllRemoveCombinationsIndexes(
             StringBuilder stringBuilder,
             int numOfRemove,
             char removedChar) { //return all combination of removable chars
-        ArrayList<String> preList = new ArrayList<String>();
 
+        ArrayList<String> preList = new ArrayList<String>();
 
         ArrayList<String> list = new ArrayList<String>();
 
@@ -81,13 +81,12 @@ public class Validator {
         //start
         int N = list.size();//N - размер алфавита
 
-        int[] pow = new int[numOfRemove + 1];//массив для степеней числа N: N^0, N^1, .., N^K
+        int[] pow = new int[numOfRemove + 1];
         pow[0] = 1;
-        for (int i = 1; i <= numOfRemove; i++) {//вычисляем степени числа N
+        for (int i = 1; i <= numOfRemove; i++) {
             pow[i] = pow[i - 1] * N;
         }
 
-        //перебираем все номера комбинаций
         for (int i = 0; i < pow[numOfRemove]; i++) {
             String[] arr = new String[numOfRemove];
 
@@ -125,18 +124,17 @@ public class Validator {
         return afterPreList;
     }
 
-    public static Set<String> removeCharsByCombinationList(ArrayList<TreeSet<Integer>> combinationList, StringBuilder validRow) {
+    private static Set<String> removeCharsByCombinationList(ArrayList<TreeSet<Integer>> combinationList, StringBuilder validRow) {
         Set<String> finalList = new LinkedHashSet<String>();
         for (TreeSet<Integer> innerSet :
                 combinationList) {
             StringBuilder stringBuilder = new StringBuilder(validRow);
-            int k = 0;
+            int deletedIndex = 0;
             for (int inner : innerSet) {
-                stringBuilder.deleteCharAt(inner - k);
-                k++;
+                stringBuilder.deleteCharAt(inner - deletedIndex);
+                deletedIndex++;
             }
             finalList.add(stringBuilder.toString());
-
         }
         return finalList;
     }
@@ -144,22 +142,33 @@ public class Validator {
     public static StringBuilder removeFirstAndLastChars(String string) {
         StringBuilder stringBuilder = new StringBuilder(string);
         boolean flag = true;
+        int startChar = 0;
+        int lastChar = stringBuilder.length() - 1;
         while (flag) {   //remove first and last invalid chars from input row
 
-            if(stringBuilder.length()==0){
+            if (stringBuilder.length() == 0) {
                 return stringBuilder;
             }
-            if (stringBuilder.charAt(0) == CLOSE) {
-                stringBuilder.deleteCharAt(0);
+
+            if (stringBuilder.charAt(startChar) != CLOSE && stringBuilder.charAt(startChar) != OPEN) {
+                startChar++;
             } else {
-                int lastChar = stringBuilder.length() - 1;
-                if (stringBuilder.charAt(lastChar) == OPEN) {
-                    stringBuilder.deleteCharAt(lastChar);
+                if (stringBuilder.charAt(startChar) == CLOSE) {
+                    stringBuilder.deleteCharAt(startChar);
+                    lastChar--;
+                }
+
+                if (stringBuilder.charAt(lastChar) != CLOSE && stringBuilder.charAt(lastChar) != OPEN) {
+                    lastChar--;
                 } else {
-                    flag = false;
+                    if (stringBuilder.charAt(lastChar) == OPEN) {
+                        stringBuilder.deleteCharAt(lastChar);
+                        lastChar--;
+                    } else {
+                        flag = false;
+                    }
                 }
             }
-
         }
         return stringBuilder;
     }
