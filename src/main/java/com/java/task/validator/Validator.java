@@ -1,9 +1,6 @@
 package com.java.task.validator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 import static java.lang.Math.abs;
 
@@ -91,14 +88,14 @@ public class Validator {
 
         for (int i = 1; i < inputSecondRow.length(); i++) {//Second check
             if (residual2 > 0) {
-                if (inputSecondRow.charAt(i-1) == OPEN && inputSecondRow.charAt(i ) == OPEN) {
+                if (inputSecondRow.charAt(i - 1) == OPEN && inputSecondRow.charAt(i) == OPEN) {
                     inputSecondRow.deleteCharAt(i);
 
                     residual2--;
                 }
             } else {
-                if (inputSecondRow.charAt(i-1) == CLOSE && inputSecondRow.charAt(i ) == CLOSE  ) {
-                    inputSecondRow.deleteCharAt(i-1);
+                if (inputSecondRow.charAt(i - 1) == CLOSE && inputSecondRow.charAt(i) == CLOSE) {
+                    inputSecondRow.deleteCharAt(i - 1);
                     residual2++;
                     i--;
                 }
@@ -114,20 +111,17 @@ public class Validator {
 
     }
 
-    public static ArrayList<TreeSet<Integer>> findAllRemoveCombinationsIndexes(StringBuilder stringBuilder, int numOfRemove, char removedChar){ //return all combination of removable chars
-        ArrayList<String> preList =new ArrayList<String>();
-
+    public static ArrayList<TreeSet<Integer>> findAllRemoveCombinationsIndexes(StringBuilder stringBuilder, int numOfRemove, char removedChar) { //return all combination of removable chars
+        ArrayList<String> preList = new ArrayList<String>();
 
 
         ArrayList<String> list = new ArrayList<String>();
 
-        for(int i = 0; i < stringBuilder.length(); i++){
-            if(stringBuilder.charAt(i) == removedChar){
+        for (int i = 0; i < stringBuilder.length(); i++) {
+            if (stringBuilder.charAt(i) == removedChar) {
                 list.add(String.valueOf(i));
             }
         }
-
-
 
 
         //start
@@ -148,8 +142,8 @@ public class Validator {
                 arr[j] = list.get((i / pow[j]) % N);
             }
             //вывод в консоль
-            StringBuilder builder=new StringBuilder();
-            for(String ch : arr){
+            StringBuilder builder = new StringBuilder();
+            for (String ch : arr) {
                 //System.out.print(ch);
                 builder.append(ch).append(' ');
             }
@@ -161,15 +155,15 @@ public class Validator {
         ArrayList<TreeSet<Integer>> afterPreList = new ArrayList<TreeSet<Integer>>();
         for (String str : preList) {
             TreeSet<Integer> innerSet = new TreeSet<Integer>();
-            int foundSpaceIndex=0;
-            for (int i=0;i<str.length();i++) {
-                if (str.charAt(i)==' ') {
+            int foundSpaceIndex = 0;
+            for (int i = 0; i < str.length(); i++) {
+                if (str.charAt(i) == ' ') {
 
-                    innerSet.add(Integer.valueOf(str.substring(foundSpaceIndex,i)));
-                    foundSpaceIndex=i+1;
+                    innerSet.add(Integer.valueOf(str.substring(foundSpaceIndex, i)));
+                    foundSpaceIndex = i + 1;
                 }
             }
-            if (innerSet.size()==numOfRemove) {
+            if (innerSet.size() == numOfRemove) {
                 afterPreList.add(innerSet);
             }
 
@@ -177,7 +171,20 @@ public class Validator {
         return afterPreList;
     }
 
-    public static List<String> removeCharsByCombinationList( ArrayList<TreeSet<Integer>> combinationList,String validRow){
-        return null;
+    public static LinkedHashSet<String> removeCharsByCombinationList(ArrayList<TreeSet<Integer>> combinationList, StringBuilder validRow) {
+        LinkedHashSet<String> finalList = new LinkedHashSet<String>();
+        ;
+        for (TreeSet<Integer> innerSet :
+                combinationList) {
+            StringBuilder stringBuilder = new StringBuilder(validRow);
+            int k = 0;
+            for (int inner : innerSet) {
+                stringBuilder.deleteCharAt(inner - k);
+                k++;
+            }
+            finalList.add(stringBuilder.toString());
+
+        }
+        return finalList;
     }
 }

@@ -27,8 +27,11 @@ public class ValidatorTest {
     @Test
     public void shouldWorkFullCheck() {
 
-        StringBuilder builder = new StringBuilder("{{}}}{}}}{}}");
-        System.out.println(Validator.findAllRemoveCombinationsIndexes(builder, 4, '}'));
+        StringBuilder builder = new StringBuilder("{}}{}}");
+        System.out.println(Validator.findAllRemoveCombinationsIndexes(builder, 2, '}'));
+        System.out.println();
+        System.out.println(Validator.removeCharsByCombinationList(Validator.findAllRemoveCombinationsIndexes(builder, 2, '}'),builder));
+
         //Validator.fullCheck();
 
     }
