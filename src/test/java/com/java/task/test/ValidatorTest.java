@@ -23,4 +23,13 @@ public class ValidatorTest {
         System.out.println(validate(testRow));
 
     }
+
+    @Test
+    public void shouldWorkFullCheck() {
+
+        StringBuilder builder = new StringBuilder("{{}}}{}}}{}}");
+        System.out.println(Validator.findAllRemoveCombinationsIndexes(builder, 4, '}'));
+        //Validator.fullCheck();
+
+    }
 }

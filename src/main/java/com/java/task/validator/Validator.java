@@ -1,5 +1,7 @@
 package com.java.task.validator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -95,7 +97,7 @@ public class Validator {
                     residual2--;
                 }
             } else {
-                if (inputSecondRow.charAt(i-1) == CLOSE && inputSecondRow.charAt(i ) == CLOSE  ) {// || inputSecondRow.charAt(i ) == CLOSE && inputSecondRow.charAt(i + 1) == OPEN
+                if (inputSecondRow.charAt(i-1) == CLOSE && inputSecondRow.charAt(i ) == CLOSE  ) {
                     inputSecondRow.deleteCharAt(i-1);
                     residual2++;
                     i--;
@@ -110,5 +112,72 @@ public class Validator {
         validateSet.add(inputSecondRow.toString());
         return validateSet;
 
+    }
+
+    public static ArrayList<TreeSet<Integer>> findAllRemoveCombinationsIndexes(StringBuilder stringBuilder, int numOfRemove, char removedChar){ //return all combination of removable chars
+        ArrayList<String> preList =new ArrayList<String>();
+
+
+
+        ArrayList<String> list = new ArrayList<String>();
+
+        for(int i = 0; i < stringBuilder.length(); i++){
+            if(stringBuilder.charAt(i) == removedChar){
+                list.add(String.valueOf(i));
+            }
+        }
+
+
+
+
+        //start
+        int N = list.size();//N - размер алфавита
+
+        int[] pow = new int[numOfRemove + 1];//массив для степеней числа N: N^0, N^1, .., N^K
+        pow[0] = 1;
+        for (int i = 1; i <= numOfRemove; i++) {//вычисляем степени числа N
+            pow[i] = pow[i - 1] * N;
+        }
+
+        //перебираем все номера комбинаций
+        for (int i = 0; i < pow[numOfRemove]; i++) {
+            String[] arr = new String[numOfRemove];
+
+            for (int j = 0; j < numOfRemove; j++) {
+
+                arr[j] = list.get((i / pow[j]) % N);
+            }
+            //вывод в консоль
+            StringBuilder builder=new StringBuilder();
+            for(String ch : arr){
+                //System.out.print(ch);
+                builder.append(ch).append(' ');
+            }
+
+            preList.add(builder.toString());
+        }
+
+
+        ArrayList<TreeSet<Integer>> afterPreList = new ArrayList<TreeSet<Integer>>();
+        for (String str : preList) {
+            TreeSet<Integer> innerSet = new TreeSet<Integer>();
+            int foundSpaceIndex=0;
+            for (int i=0;i<str.length();i++) {
+                if (str.charAt(i)==' ') {
+
+                    innerSet.add(Integer.valueOf(str.substring(foundSpaceIndex,i)));
+                    foundSpaceIndex=i+1;
+                }
+            }
+            if (innerSet.size()==numOfRemove) {
+                afterPreList.add(innerSet);
+            }
+
+        }
+        return afterPreList;
+    }
+
+    public static List<String> removeCharsByCombinationList( ArrayList<TreeSet<Integer>> combinationList,String validRow){
+        return null;
     }
 }
