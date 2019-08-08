@@ -149,9 +149,12 @@ public class Validator {
             if (stringBuilder.length() == 0) {
                 return stringBuilder;
             }
-
+            if (startChar==lastChar) {
+                return stringBuilder;
+            }
             if (stringBuilder.charAt(startChar) != CLOSE && stringBuilder.charAt(startChar) != OPEN) {
                 startChar++;
+
             } else {
                 if (stringBuilder.charAt(startChar) == CLOSE) {
                     stringBuilder.deleteCharAt(startChar);
