@@ -47,13 +47,13 @@ public class Validator {
         validateSet = removeCharsByCombinationList(findAllRemoveCombinationsIndexes(builderFromInputRow, abs(residual), removedChar), builderFromInputRow);
 
 
-        for (Iterator<String> it = validateSet.iterator(); it.hasNext(); ) {
+        for (Iterator<String> stringIterator = validateSet.iterator(); stringIterator.hasNext(); ) {
 
-            String element = it.next();
+            String element = stringIterator.next();
 
             if (element.length() != removeFirstAndLastChars(element).length()) {
 
-                it.remove();
+                stringIterator.remove();
             }
         }
 
