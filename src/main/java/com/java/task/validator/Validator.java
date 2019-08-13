@@ -21,7 +21,7 @@ public class Validator {
 
 
         StringBuilder builderFromInputRow = removeFirstAndLastChars(input);
-        if (builderFromInputRow.length() <= 1) {
+        if (builderFromInputRow.length() <= 0) {
             validateSet.add("");
             return validateSet;
         }
@@ -54,6 +54,20 @@ public class Validator {
             if (element.length() != removeFirstAndLastChars(element).length()) {
 
                 stringIterator.remove();
+                continue;
+            }
+            int posCharCount=0;
+            for (int i =0;i<element.length();i++) {
+                if(element.charAt(i)==OPEN){
+                    posCharCount++;
+                }
+                if(element.charAt(i)==CLOSE){
+                    posCharCount--;
+                }
+                if (posCharCount<0) {
+                    stringIterator.remove();
+                    break;
+                }
             }
         }
 

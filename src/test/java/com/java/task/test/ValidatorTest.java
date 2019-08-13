@@ -27,6 +27,18 @@ public class ValidatorTest {
 
     }
     @Test
+    public void shouldReturnValidSetLikeReworkOne(){
+        String testRow ="a";
+        System.out.println(validate(testRow));
+
+    }
+    @Test
+    public void shouldReturnValidSetLikeReworkTwo(){
+        String testRow ="{}}{{}}{";
+        System.out.println(validate(testRow));
+
+    }
+    @Test
     public void shouldReturnValidSet(){
         String testRow ="XX{X}t{{e{}}}x}t}{}X";
         System.out.println(validate(testRow));
